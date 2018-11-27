@@ -17,7 +17,7 @@ let View = {
 }
 
 export default class Plot {
-    constructor({data = Data, view = View}) {
+    constructor(data = Data, view = View) {
         this.data = data;
         this.view = view;
         this.container = view.container;
@@ -67,13 +67,20 @@ export default class Plot {
         let channels = this.channels();
         let vmap = this.data.vmap;
         let domains = this.data.domains || null;
+        let fields = this.data.fields || null;
+        if(fields === null) fields = Object.keys(this.data.json[0]);
+        
         for (let channel of Object.keys(channels)) {
             if(channel in vmap) {
                 let domain; 
                 if(domains === null) {
                     let value = this.data.json.map(d=>d[vmap[channel]]);
-                    let min = Math.min(...value);
-                    let max = Math.max(...value);
+                    let min = Math.min(...value) || 0;
+                    let max = Math.max(...value) || 0;
+                   
+                    if(max === min) {
+                        max += 1e-6;
+                    }
                     domain = [min, max];
                 } else {
                     domain = domains[vmap[channel]] || [0, 1];
@@ -88,13 +95,21 @@ export default class Plot {
     }
 
     axes() {
-        if(this.view.axes) {
+        if(!this.view.hideAxes) {
             this.xAxis = this.svg.main.append('g')
-            .call(axisLeft(this.scales.y).ticks(this.width / 80))
-            
-          this.yAxis = this.svg.main.append('g')
             .attr("transform", `translate(0, ${this.height})`)
-            .call(axisBottom(this.scales.x).ticks(this.height / 80))
+            .call(axisBottom(this.scales.x))
+            
+            this.yAxis = this.svg.main.append('g')
+                .call(axisLeft(this.scales.y).ticks(this.height/20))
+
+            if(this.view.gridlines && this.view.gridlines.y) {
+                this.yGridlines = this.yAxis.append('g')
+                .style('opacity', 0.3)
+                .call(axisLeft(this.scales.y).ticks(this.height/30).tickSize(-this.width))
+                .selectAll('text').remove()
+            }
+            
         }
     }
 

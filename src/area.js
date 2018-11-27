@@ -2,8 +2,10 @@ import Plot from './plot';
 import {area, curveBasis} from 'd3-shape';
 
 export default class AreaChart extends Plot {
+   
     constructor(data, view) {
-        super(data, view);        
+        super(data, view);
+        this.render();
     }
 
     render() {
@@ -20,6 +22,7 @@ export default class AreaChart extends Plot {
             .datum(this.data.json)
             .attr("d", shape)
             .style("fill", vmap.color)
+            .style("fill-opacity", vmap.opacity)
             .style("stroke", vmap.color)
             .style("stroke-width", 1)
     }
