@@ -23,11 +23,8 @@ export default function() {
         skipDefault: true,
         getContext: false,
         condition: function(vmap) { return vmap.mark === 'area'}, 
-        procedure: function(data, view) {
-            let vis = new AreaChart({data, view});
-            vis.render();
-            return vis;
-        }
+        type: 'class',
+        function: AreaChart
     })
     
     px.input({

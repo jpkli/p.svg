@@ -67,8 +67,8 @@ export default class Plot {
         let channels = this.channels();
         let vmap = this.data.vmap;
         let domains = this.data.domains || null;
-        let fields = this.data.fields || null;
-        if(fields === null) fields = Object.keys(this.data.json[0]);
+        // let fields = this.data.fields || null;
+        // if(fields === null) fields = Object.keys(this.data.json[0]);
         
         for (let channel of Object.keys(channels)) {
             if(channel in vmap) {

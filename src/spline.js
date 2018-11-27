@@ -6,7 +6,7 @@ import {schemeCategory10} from 'd3-scale-chromatic';
 export default class Spline extends Plot {
     constructor(data, view) {
         super(data, view);
-        this.render();       
+        this.render();
     }
 
     render() {

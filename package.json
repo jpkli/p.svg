@@ -31,7 +31,6 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "d3": "^5.7.0",
     "d3-axis": "^1.0.12",
     "d3-geo": "^1.11.1",
     "d3-scale": "^2.1.2",
