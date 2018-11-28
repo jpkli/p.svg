@@ -1,7 +1,7 @@
 import Plot from './plot';
-import result from "./usa.topo.json";
-
-import {geoPath} from 'd3-geo';
+import us from './usa.topo.json';
+import airports from './airports.json';
+import {geoPath, geoAlbers} from 'd3-geo';
 import * as topojson from 'topojson-client';
 
 export default class Map extends Plot {
@@ -10,19 +10,28 @@ export default class Map extends Plot {
     }
 
     render() { 
-        let path = geoPath();
+        let projection = geoAlbers();
 
-        this.svg.main.append("g")
-            .attr("class", "states")
-            .selectAll("path")
-            .data(topojson.feature(result, result.objects.states).features)
-            .enter().append("path")
-                .attr("d", path);
-    
+        let path = geoPath()
+            .projection(projection)
+            .pointRadius(1.5);
+
         this.svg.main.append("path")
-            .attr("class", "state-borders")
-            .attr("d", path(topojson.mesh(result, result.objects.states, function(a, b) { return a !== b; })));
+            .datum(topojson.feature(us, us.objects.land))
+            .attr("class", "land")
+            .attr("d", path)
+            .attr("fill", "lightgray");
 
-
+        this.svg.main.append("path")
+            .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+            .attr("class", "states")
+            .attr("d", path)
+            .attr("fill", "none")
+            .attr("stroke", "white");
+        
+        this.svg.main.append("path")
+            .datum(topojson.feature(airports, airports.objects.airports))
+            .attr("class", "points")
+            .attr("d", path);
     }
 }

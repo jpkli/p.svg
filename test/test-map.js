@@ -8,7 +8,7 @@ export default function() {
         vmap: {
             x: 'time',
             y: 'value',
-            color: 'black'
+            color: 'steelblue'
         }
     };
 
