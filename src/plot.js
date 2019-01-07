@@ -39,7 +39,9 @@ export default class Plot {
             this.svg.main = select(view.svg);
         }
 
-        this.scales = this.getScales()
+        if(this.data.json) {
+            this.scales = this.getScales();
+        }
     }
 
     createSvg() {
