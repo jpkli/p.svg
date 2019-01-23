@@ -23,7 +23,6 @@ export default class AreaChart extends Plot {
             .attr("d", shape)
             .style("fill", vmap.color)
             .style("fill-opacity", vmap.opacity)
-            .style("stroke", vmap.color)
-            .style("stroke-width", 1)
+            .style("stroke-width", 0)
     }
 }

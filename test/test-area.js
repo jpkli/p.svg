@@ -5,7 +5,7 @@ export default function() {
 
     let data = {
         json: [
-            {time: 1, value: 30},
+            {time: 1, value: 130},
             {time: 2, value: 391},
             {time: 3, value: 230},
             {time: 4, value: 630},

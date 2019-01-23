@@ -1,5 +1,6 @@
 import {scaleLinear} from 'd3-scale';
 import {select} from 'd3-selection';
+import {interpolateHcl} from 'd3-interpolate';
 import {axisLeft, axisBottom} from 'd3-axis';
 
 let Data = {
@@ -56,7 +57,7 @@ export default class Plot {
         return {
             x: [0, this.width],
             y: [this.height, 0],
-            color: ['white', 'green'],
+            color: ['steelblue', 'red'],
             opacity: [0, 1],
             size: [2, 20],
             width: [0, this.width],
@@ -69,11 +70,14 @@ export default class Plot {
         let channels = this.channels();
         let vmap = this.data.vmap;
         let domains = this.data.domains || null;
-        // let fields = this.data.fields || null;
-        // if(fields === null) fields = Object.keys(this.data.json[0]);
+        let fields = this.data.fields || null;
+        if(fields === null && this.data.json) {
+            this.data.fields = Object.keys(this.data.json[0]);
+            fields = Object.keys(this.data.json[0]);
+        }
         
         for (let channel of Object.keys(channels)) {
-            if(channel in vmap) {
+            if(channel in vmap && fields.indexOf(vmap[channel]) !== -1) {
                 let domain; 
                 if(domains === null) {
                     let value = this.data.json.map(d=>d[vmap[channel]]);
@@ -90,6 +94,11 @@ export default class Plot {
                 
                 let range = channels[channel];
                 scales[channel] = scaleLinear().domain(domain).range(range);
+                if(channel == 'color') {
+                    scales[channel].interpolate(interpolateHcl)
+                }
+            } else {
+                scales[channel] = () => vmap[channel]
             }
         }
 
