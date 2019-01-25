@@ -1,4 +1,3 @@
-import p4 from 'p4';
 import AreaChart from '../src/area';
 
 export default function() {
