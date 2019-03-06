@@ -1,4 +1,4 @@
-import {scaleLinear} from 'd3-scale';
+import {scaleLinear, scaleOrdinal} from 'd3-scale';
 import {select} from 'd3-selection';
 import {interpolateHcl} from 'd3-interpolate';
 import {axisLeft, axisBottom} from 'd3-axis';
@@ -26,6 +26,7 @@ export default class Plot {
         this.height = view.height;
         this.width = view.width;
         this.svg = {};
+        this.domains = data.domains || {};
 
         if(!view.svg || view.svg === null) {
             if(view.container !== null) {
@@ -39,7 +40,7 @@ export default class Plot {
         } else {
             this.svg.main = select(view.svg);
         }
-
+        
         if(this.data.json) {
             this.scales = this.getScales();
         }
@@ -69,7 +70,7 @@ export default class Plot {
         let scales = {};
         let channels = this.channels();
         let vmap = this.data.vmap;
-        let domains = this.data.domains || null;
+
         let fields = this.data.fields || null;
         if(fields === null && this.data.json) {
             this.data.fields = Object.keys(this.data.json[0]);
@@ -79,7 +80,7 @@ export default class Plot {
         for (let channel of Object.keys(channels)) {
             if(channel in vmap && fields.indexOf(vmap[channel]) !== -1) {
                 let domain; 
-                if(domains === null) {
+                if(!this.domains.hasOwnProperty(vmap[channel])) {
                     let value = this.data.json.map(d=>d[vmap[channel]]);
                     let min = Math.min(...value) || 0;
                     let max = Math.max(...value) || 0;
@@ -88,12 +89,16 @@ export default class Plot {
                         max += 1e-6;
                     }
                     domain = [min, max];
+                    this.domains[vmap[channel]] = domain;
                 } else {
-                    domain = domains[vmap[channel]] || [0, 1];
+                    domain = this.domains[vmap[channel]] || [0, 1];
                 }
-                
                 let range = channels[channel];
-                scales[channel] = scaleLinear().domain(domain).range(range);
+                if( (this.data.schema && this.data.schema[vmap[channel] === 'string'])) {
+                    scales[channel] = scaleOrdinal().domain(domain).rangeRoundBands([0, this.width], .05);
+                } else {
+                    scales[channel] = scaleLinear().domain(domain).range(range);
+                }
                 if(channel == 'color') {
                     scales[channel].interpolate(interpolateHcl)
                 }
@@ -109,7 +114,7 @@ export default class Plot {
         if(!this.view.hideAxes) {
             this.xAxis = this.svg.main.append('g')
             .attr("transform", `translate(0, ${this.height})`)
-            .call(axisBottom(this.scales.x))
+            .call(axisBottom(this.scales.x).tickSizeOuter(0))
             
             this.yAxis = this.svg.main.append('g')
                 .call(axisLeft(this.scales.y).ticks(this.height/20))
