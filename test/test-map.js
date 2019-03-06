@@ -4,7 +4,7 @@ import {csv} from 'd3-request';
 
 export default function() {
     csv('../assets/governments.csv', function(rows){
-
+        console.log(rows)
         let data = {
             json: rows,
             join: {
@@ -26,7 +26,7 @@ export default function() {
         }
     
         let testMap = new geoMap(data, view).render();
-        testMap.addLayer({type: 'point', data: airports, feature: 'airports'});
+        // testMap.addLayer({type: 'point', data: airports, feature: 'airports'});
     })
 
 }

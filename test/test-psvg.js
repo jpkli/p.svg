@@ -1,6 +1,8 @@
 import testMap from './test-map';
 import ScatterPlot from '../src/circle';
 import AreaChart from '../src/area';
+import BarChart from '../src/bar';
+import testP4Ext from './test-p4ext';
 
 let exampleList = document.getElementById('examples');
 let examples = [
@@ -43,8 +45,21 @@ if (url.searchParams.get('map') !== null) {
   testMap();
 } else if (url.searchParams.get('area') !== null) {
   new AreaChart(data, view).render();
+} else if (url.searchParams.get('bar') !== null) {
+  let barChart = new BarChart(data, view);
+  barChart.update([{time: 1, value: 230},
+    {time: 2, value: 191},
+    {time: 3, value: 220},
+    {time: 4, value: 230},
+    {time: 5, value: 300}], 'red')
+    
+    barChart.update([{time: 1, value: 230},
+      {time: 2, value: 191},
+      {time: 3, value: 220},
+      {time: 4, value: 230},
+      {time: 5, value: 200}], 'red')
 } else if (url.searchParams.get('ext') !== null) {
-  testP4ext();
+  testP4Ext();
 } else {
   new ScatterPlot(data, view).render();
 }

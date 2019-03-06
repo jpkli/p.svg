@@ -4,7 +4,7 @@ import AreaChart from '../src/area';
 export default function() {
 
     let config = {
-        container: 'vis',
+        container: 'body',
         viewport: [800, 500]
     };
     
