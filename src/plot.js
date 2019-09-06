@@ -113,19 +113,34 @@ export default class Plot {
     axes() {
         if(!this.view.hideAxes) {
             this.xAxis = this.svg.main.append('g')
-            .attr("transform", `translate(0, ${this.height})`)
-            .call(axisBottom(this.scales.x).tickSizeOuter(0))
+                .attr("transform", `translate(0, ${this.height})`)
+                .call(axisBottom(this.scales.x).tickSizeOuter(0))
             
             this.yAxis = this.svg.main.append('g')
-                .call(axisLeft(this.scales.y).ticks(this.height/20))
+                .call(axisLeft(this.scales.y).ticks(this.height/20));
 
             if(this.view.gridlines && this.view.gridlines.y) {
                 this.yGridlines = this.yAxis.append('g')
                 .style('opacity', 0.3)
                 .call(axisLeft(this.scales.y).ticks(this.height/30).tickSize(-this.width))
-                .selectAll('text').remove()
+                .selectAll('text').remove();
             }
-            
+
+            this.AxisLabels = this.svg.main.append('g')
+
+            this.AxisLabels.append("text")
+              .attr("x", this.width / 2)
+              .attr("y", this.height + this.padding.bottom / 2 )
+              .attr("dy", "1em")
+              .style("text-anchor", "middle")
+              .text(this.data.vmap.x);
+        
+            this.AxisLabels.append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("y", -this.padding.left / 1.25 )
+              .attr("x", -this.height / 2 - this.padding.top )
+              .attr("dy", "1em")
+              .text(this.data.vmap.y);
         }
     }
 

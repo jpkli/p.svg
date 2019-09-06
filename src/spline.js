@@ -1,6 +1,6 @@
 import Plot from './plot';
 import {line, curveBasis} from 'd3-shape';
-import {scaleOrdinal, schemeCategory10} from 'd3-scale';
+import {scaleOrdinal} from 'd3-scale';
 import {schemeCategory10} from 'd3-scale-chromatic';
 
 export default class Spline extends Plot {
